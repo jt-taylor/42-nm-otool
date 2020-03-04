@@ -1,0 +1,14 @@
+This is everything i looked at pertaining to this project most of this is usefull , some of it won't be .
+
+https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+https://medium.com/a-42-journey/nm-otool-everything-you-need-to-know-to-build-your-own-7d4fef3d7507
+https://web.archive.org/web/20090901205800/http://developer.apple.com/mac/library/documentation/DeveloperTools/Conceptual/MachORuntime/Reference/reference.html
+https://lowlevelbits.org/parsing-mach-o-files/
+http://timetobleed.com/dynamic-linking-elf-vs-mach-o/
+https://yurylapitsky.com/exploring_mach-o_binaries
+http://www.cs.miami.edu/home/burt/learning/Csc521.091/docs/MachOTopics.pdf
+https://github.com/aidansteele/osx-abi-macho-file-format-reference
+https://yossarian.net/res/pub/macho-internals/macho-internals.pdf
+
+also you might want to look at the headers for the mach-o header files ,
+https://opensource.apple.com/source/xnu/xnu-1456.1.26/EXTERNAL_HEADERS/mach-o/loader.h

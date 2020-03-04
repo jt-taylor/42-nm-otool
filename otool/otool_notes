@@ -1,0 +1,5 @@
+so we are only suposed to write this as otool -t
+	which if you look at the man for otool-classic it just says
+	```-t     Display the contents of the (__TEXT,__text) section.  With the -v flag, this disassembles the text.  With the -V flag, it also  symbolically disassembles the operands.```
+	which at least before iv'e written it doesn't look to complecated
+	this project feels a lot like the ft_tar rush

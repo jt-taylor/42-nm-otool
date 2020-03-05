@@ -9,6 +9,14 @@ https://yurylapitsky.com/exploring_mach-o_binaries
 http://www.cs.miami.edu/home/burt/learning/Csc521.091/docs/MachOTopics.pdf
 https://github.com/aidansteele/osx-abi-macho-file-format-reference
 https://yossarian.net/res/pub/macho-internals/macho-internals.pdf
+https://jameshfisher.com/2017/08/22/inspecting-mach-o-files/
+http://mirror.informatimago.com/next/developer.apple.com/documentation/DeveloperTools/Conceptual/MachORuntime/8rt_file_format/chapter_10_section_1.html
+https://gist.github.com/landonf/1046134
 
 also you might want to look at the headers for the mach-o header files ,
 https://opensource.apple.com/source/xnu/xnu-1456.1.26/EXTERNAL_HEADERS/mach-o/loader.h
+
+im not sure if we need to handle archives for either nm  && otool ,
+looks like we do but the way the file is set up should mean we don't need to do anything fancy
+with lists or anything , pretty sure we just end up reading the archive header
+then all the objects are after it sequentially mostly the same way tar works

@@ -12,6 +12,10 @@ https://yossarian.net/res/pub/macho-internals/macho-internals.pdf
 https://jameshfisher.com/2017/08/22/inspecting-mach-o-files/
 http://mirror.informatimago.com/next/developer.apple.com/documentation/DeveloperTools/Conceptual/MachORuntime/8rt_file_format/chapter_10_section_1.html
 https://gist.github.com/landonf/1046134
+https://stackoverflow.com/questions/44579663/mach-o-magic-and-cigam-clarification
+
+//the open source code of otool
+https://opensource.apple.com/source/cctools/cctools-358/otool/
 
 also you might want to look at the headers for the mach-o header files ,
 https://opensource.apple.com/source/xnu/xnu-1456.1.26/EXTERNAL_HEADERS/mach-o/loader.h

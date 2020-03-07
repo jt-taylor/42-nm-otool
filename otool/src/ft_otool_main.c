@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/06 18:51:05 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 12:35:09 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int				otool_handle(void		*data, size_t len, char *file_name)
 
 	o.data = data;
 	o.len = len;
+	o.file_name = file_name;
 	has_magic = otool_file_read_protect(&o, o.data, sizeof(uint32_t));
 	if (!has_magic)
 		return (0);

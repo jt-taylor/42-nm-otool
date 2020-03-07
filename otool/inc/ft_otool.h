@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:49:56 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/06 18:45:01 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 12:34:40 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@
 typedef struct		s_ft_otool
 {
 	void		*data;
-	size_t			len;
+	size_t		len;
+	char		*file_name;
 }					t_ft_otool;
 
 /*

@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 17:06:52 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 12:30:07 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 12:36:28 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,14 @@ static void	hex_dump(void *data, size_t len_to_dump)//need to fix the formatting
 			write(1, " ", 1);
 		i++;
 	}
+	write(1, "\n", 1);
 }
 
-static void	otool_hex_dump_mach_o_64_magic(void *data, size_t to_dump)
+static void	otool_hex_dump_mach_o_64_magic(void *data, size_t to_dump,
+		char *file_name)
 {
+	if (file_name)
+		ft_printf("%s:\n%s\n", file_name, FT_OTOOL_TEXT);
 	hex_dump(data, to_dump);
 }
 
@@ -63,7 +67,7 @@ static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	while (i < ((swap_end) ? swap_uint64((uint64_t)curr_segment->nsects) : curr_segment->nsects))
 	{
 		if (ft_strequ((s_64 + i)->sectname, SECT_TEXT) && ft_strequ((s_64 + i)->segname, SEG_TEXT))// these are from the mach-o/loader header
-			otool_hex_dump_mach_o_64_magic(o->data + (s_64 + i)->offset, (s_64 + i)->size);
+			otool_hex_dump_mach_o_64_magic(o->data + (s_64 + i)->offset, (s_64 + i)->size, o->file_name);
 		i++;
 	}
 }
@@ -74,8 +78,7 @@ void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end)
 	struct load_command			*load_c;
 	uint32_t					tmp;
 
-	if (file_name)
-		ft_printf("%s:\n%s\n", file_name, FT_OTOOL_TEXT);
+	(void)file_name;
 	m_header = (struct mach_header_64 *)o->data;
 	if (m_header->cputype != CPU_TYPE_X86_64 && m_header->cputype != CPU_TYPE_POWERPC64)//im not sure which exact header te CPU_TYPES are defined in, but looking through the includes in the mach-o headers
 		//probably isn't important

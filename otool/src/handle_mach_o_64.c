@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 17:06:52 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 12:22:32 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 12:30:07 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	otool_hex_dump_mach_o_64_cigam()
 static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	int swap_end)
 {
-	(void)o;//ill need this later i think
 	(void)size;
 	struct segment_command_64		*curr_segment;
 	struct section_64				*s_64;
@@ -64,7 +63,7 @@ static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	while (i < ((swap_end) ? swap_uint64((uint64_t)curr_segment->nsects) : curr_segment->nsects))
 	{
 		if (ft_strequ((s_64 + i)->sectname, SECT_TEXT) && ft_strequ((s_64 + i)->segname, SEG_TEXT))// these are from the mach-o/loader header
-			otool_hex_dump_mach_o_64_magic(load_cmd + (s_64 + i)->offset, (s_64 + i)->size);
+			otool_hex_dump_mach_o_64_magic(o->data + (s_64 + i)->offset, (s_64 + i)->size);
 		i++;
 	}
 }

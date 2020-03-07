@@ -6,13 +6,15 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 17:06:52 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/06 20:13:21 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 12:22:32 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
-static void	hex_dump(void *data, size_t len_to_dump)
+static void	hex_dump(void *data, size_t len_to_dump)//need to fix the formatting
+	//this looks like it's printing the write amount of data , not sure why the actual content is different
+	//so its starting the pritning to far into the file, it starts to lines farther than it should be
 {
 	size_t		i;
 	void		*tmp;
@@ -22,11 +24,12 @@ static void	hex_dump(void *data, size_t len_to_dump)
 	while (i < len_to_dump)
 	{
 		if (i % 16 == 0)
-			ft_printf("%16.16llx\t", data + i);
-		ft_printf("%2.2x", 0xff & ((char *)data)[i]);//so we only print 2 cchar
-		write(1, " ", 1);
+			ft_printf("%016llx\t", i);
+		ft_printf("%02llx", 0xff & ((char *)data)[i]);//so we only print 2 cchar
 		if (i % 16 == 15)
 			write(1, "\n", 1);
+		else
+			write(1, " ", 1);
 		i++;
 	}
 }
@@ -50,6 +53,7 @@ static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	int swap_end)
 {
 	(void)o;//ill need this later i think
+	(void)size;
 	struct segment_command_64		*curr_segment;
 	struct section_64				*s_64;
 	uint64_t								i;
@@ -60,7 +64,7 @@ static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	while (i < ((swap_end) ? swap_uint64((uint64_t)curr_segment->nsects) : curr_segment->nsects))
 	{
 		if (ft_strequ((s_64 + i)->sectname, SECT_TEXT) && ft_strequ((s_64 + i)->segname, SEG_TEXT))// these are from the mach-o/loader header
-			otool_hex_dump_mach_o_64_magic(load_cmd + (s_64 + i)->offset, size);
+			otool_hex_dump_mach_o_64_magic(load_cmd + (s_64 + i)->offset, (s_64 + i)->size);
 		i++;
 	}
 }
@@ -72,7 +76,7 @@ void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end)
 	uint32_t					tmp;
 
 	if (file_name)
-		ft_printf("%s\n", file_name);
+		ft_printf("%s:\n%s\n", file_name, FT_OTOOL_TEXT);
 	m_header = (struct mach_header_64 *)o->data;
 	if (m_header->cputype != CPU_TYPE_X86_64 && m_header->cputype != CPU_TYPE_POWERPC64)//im not sure which exact header te CPU_TYPES are defined in, but looking through the includes in the mach-o headers
 		//probably isn't important
@@ -87,6 +91,6 @@ void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end)
 			//function to actually parse the load_c
 			handle_load_command(o, load_c, o->len, swap_end);
 		//move load_c to next load command
-		load_c += load_c->cmdsize;//set end
+		load_c = ((void *)load_c +load_c->cmdsize);//set endian
 	}
 }

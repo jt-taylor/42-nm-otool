@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:49:56 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/05 16:09:59 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/06 18:45:01 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@
 
 # include "libft.h"
 # include "ft_printf.h"
+# include "shared_func.h"
 
 # define INV_ARGS 0x01
 # define FT_OTOOL_USG "A usefull help message" // fix me later
+# define FT_OTOOL_TEXT "Contents of (__TEXT,__text) section"
 
 /*
 ** i didn't do malloc so im gonna try playing with the mmap munmap functions
@@ -65,4 +67,5 @@ typedef struct		s_ft_otool
 ** prototypes ------------------------------------------------------------------
 */
 
+void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end);
 #endif

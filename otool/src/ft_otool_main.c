@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/05 16:43:56 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/06 18:51:05 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,35 +52,30 @@ void			otool_hanldle_inner(t_ft_otool *o, char *file_name)
 	data = o->data;
 	which_magic = *(uint32_t *)data;
 	if (which_magic == MH_MAGIC || which_magic == MH_CIGAM)
-		//handle mach-o 32
+		;//handle mach-o 32
 	else if (which_magic == MH_MAGIC_64 || which_magic == MH_CIGAM_64)
-		//handle mach-o 64
+		handle_mach_o_64(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 64
 	else if (which_magic == FAT_MAGIC || which_magic == FAT_CIGAM)
-		//handle fat-bin 32
+		;//handle fat-bin 32
 	else if (which_magic == FAT_MAGIC_64 || which_magic == FAT_CIGAM_64)
-		//hanlde fat-bin 64
-	else if (which_magic == AR_MAGIC || which_magic == AR_CIGAM)
-		//think that we are supposed to handle archives
+		;//hanlde fat-bin 64
+//	else if (which_magic == AR_MAGIC || which_magic == AR_CIGAM)
+//		;//think that we are supposed to handle archives
 	else
-		//erorr magic incorrect
+		;//erorr magic incorrect
 }
 
-int				otool_handle(void		*data, size_t len)
+int				otool_handle(void		*data, size_t len, char *file_name)
 {
 	t_ft_otool		o;
 	uint32_t		*has_magic;
-	uint32_t		which_magic;
 
 	o.data = data;
 	o.len = len;
 	has_magic = otool_file_read_protect(&o, o.data, sizeof(uint32_t));
 	if (!has_magic)
 		return (0);
-	which_magic = *(uint32_t *)o.data;
-	//if else chain to pass to function based on which magic it has
-	// ie  AR_CIGAM / AR_MAGIC, MH_MAGIC / MG_CIGAM, MG_MAGIC_64 / MH_CIGAM_64
-	//
-	//
+	otool_hanldle_inner(&o, file_name);
 	return (0);
 }
 
@@ -90,7 +85,7 @@ int				otool_handle(void		*data, size_t len)
 ** then free // munmap the memory && close the file
 */
 
-static inline void	otool_open_file(char *file_name)
+static inline int	otool_open_file(char *file_name)
 {
 	int			fd;
 	struct stat	tmp;
@@ -98,11 +93,11 @@ static inline void	otool_open_file(char *file_name)
 
 	fd = open(file_name, O_RDONLY);
 	if (fd < 0)
-		ft_dprintf(2, "Erorr :Opening: file_path %s\n", file_name);
-	else if (!fstat(fd, &tmp))
-		ft_dprintf(2, "Erorr :fstat: file_path %s\n", file_name);//and close fd
+		return (ft_dprintf(2, "Erorr :Opening: file_path %s\n", file_name));
+	else if (fstat(fd, &tmp))
+		return (ft_dprintf(2, "Erorr :fstat: file_path %s\n", file_name));//and close fd
 	else if (S_ISDIR(tmp.st_mode))
-		ft_dprintf(2, "Erorr :IS_DIR: file_path %s\n", file_name);//and close fd
+		return (ft_dprintf(2, "Erorr :IS_DIR: file_path %s\n", file_name));//and close fdk
 	else if (1)
 	{
 		//still wanna play with mmap, just using mmap should be really simple
@@ -113,15 +108,16 @@ static inline void	otool_open_file(char *file_name)
 		if (!data)
 			;//exit error alloc mem
 		//pass to handle -- handle alloc fail
-		otool_handle(data, tmp.st_size);
+		otool_handle(data, tmp.st_size, file_name);
 		//unalloc memory
 		//close fd
 	}
 	else//this is redundent
-		return ;
+		return (0);
 	//still not sure if want to play with the munmap
 	munmap(data, tmp.st_size);
 	close(fd);
+	return (0);
 }
 
 static inline void	process_file_list(char **file_list, int file_count)
@@ -147,5 +143,6 @@ int		main(int ac, char **argv)
 		ft_dprintf(2, "ft_otool: missing file arglist\n");
 		return (INV_ARGS);
 	}
+	process_file_list(argv + 1, ac - 1);
 	return (0);
 }

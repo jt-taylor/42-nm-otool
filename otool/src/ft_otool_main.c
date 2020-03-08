@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 12:35:09 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 12:56:18 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,10 @@ int				otool_handle(void		*data, size_t len, char *file_name)
 	o.file_name = file_name;
 	has_magic = otool_file_read_protect(&o, o.data, sizeof(uint32_t));
 	if (!has_magic)
+	{
+		ft_printf("%s: is not an object flie\n", file_name);
 		return (0);
+	}
 	otool_hanldle_inner(&o, file_name);
 	return (0);
 }
@@ -94,11 +97,11 @@ static inline int	otool_open_file(char *file_name)
 
 	fd = open(file_name, O_RDONLY);
 	if (fd < 0)
-		return (ft_dprintf(2, "Erorr :Opening: file_path %s\n", file_name));
+		return (ft_dprintf(2, "Erorr :Opening: \'%s\'\n", file_name));
 	else if (fstat(fd, &tmp))
-		return (ft_dprintf(2, "Erorr :fstat: file_path %s\n", file_name));//and close fd
+		return (ft_dprintf(2, "Erorr :fstat: \'%s\'\n", file_name));//and close fd
 	else if (S_ISDIR(tmp.st_mode))
-		return (ft_dprintf(2, "Erorr :IS_DIR: file_path %s\n", file_name));//and close fdk
+		return (ft_dprintf(2, "Erorr :IS_DIR: \'%s\'\n", file_name));//and close fdk
 	else if (1)
 	{
 		//still wanna play with mmap, just using mmap should be really simple

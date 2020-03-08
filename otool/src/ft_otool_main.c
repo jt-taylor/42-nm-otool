@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 12:56:18 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 19:15:24 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void			otool_hanldle_inner(t_ft_otool *o, char *file_name)
 	data = o->data;
 	which_magic = *(uint32_t *)data;
 	if (which_magic == MH_MAGIC || which_magic == MH_CIGAM)
-		;//handle mach-o 32
+		handle_mach_o_32(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 32
 	else if (which_magic == MH_MAGIC_64 || which_magic == MH_CIGAM_64)
 		handle_mach_o_64(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 64
 	else if (which_magic == FAT_MAGIC || which_magic == FAT_CIGAM)

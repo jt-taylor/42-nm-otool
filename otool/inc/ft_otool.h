@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:49:56 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 12:34:40 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/07 19:15:50 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,5 @@ typedef struct		s_ft_otool
 */
 
 void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end);
+void		handle_mach_o_32(t_ft_otool *o, char *file_name, int swap_end);
 #endif

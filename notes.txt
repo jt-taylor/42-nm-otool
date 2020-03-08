@@ -24,3 +24,6 @@ im not sure if we need to handle archives for either nm  && otool ,
 looks like we do but the way the file is set up should mean we don't need to do anything fancy
 with lists or anything , pretty sure we just end up reading the archive header
 then all the objects are after it sequentially mostly the same way tar works
+
+use the -m32 flag for gcc to force 32 bit compiliation
+not sure if you can swap the endianess of the file

@@ -1,14 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_mach_o_64.c                                 :+:      :+:    :+:   */
+/*   handle_mach_o_32.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/05 17:06:52 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 19:07:25 by jtaylor          ###   ########.fr       */
+/*   Created: 2020/03/07 19:07:36 by jtaylor           #+#    #+#             */
+/*   Updated: 2020/03/07 19:13:05 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+** this is close to a carbon copy of the mach-o 64 file,
+** just with all of the mach-o64 structs replaced with mach-o 32
+*/
 
 #include "ft_otool.h"
 
@@ -51,7 +56,7 @@ static void	hex_dump(void *data, size_t len_to_dump)
 ** Display the contents of the (__TEXT,__text) section.
 */
 
-static void	otool_hex_dump_mach_o_64_magic(void *data, size_t to_dump,
+static void	otool_hex_dump_mach_o_32_magic(void *data, size_t to_dump,
 		char *file_name)
 {
 	if (file_name)
@@ -71,28 +76,28 @@ static void	otool_hex_dump_mach_o_64_magic(void *data, size_t to_dump,
 static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	int swap_end)
 {
-	struct segment_command_64		*curr_segment;
-	struct section_64				*s_64;
-	uint64_t						i;
+	struct segment_command		*curr_segment;
+	struct section				*s_32;
+	uint32_t						i;
 
 	(void)size;//implement the out of bounds check here ?
 	//think i need that to make sure that there isn't any corruption of the file
 	// probably easier to do it somewhere else ?
 	// makeing sure that we never read out of memory is gonna be a pain :{
-	curr_segment = (struct segment_command_64 *)(load_cmd);
-	s_64 = (struct section_64 *)((void *)curr_segment +
-			sizeof(struct segment_command_64));
+	curr_segment = (struct segment_command *)(load_cmd);
+	s_32 = (struct section *)((void *)curr_segment +
+			sizeof(struct segment_command));
 	i = 0;
-	while (i < ((swap_end) ? swap_uint64((uint64_t)curr_segment->nsects) :
+	while (i < ((swap_end) ? swap_uint32((uint32_t)curr_segment->nsects) :
 				curr_segment->nsects))
 	{
-		if (ft_strequ((s_64 + i)->sectname, SECT_TEXT) &&
-				ft_strequ((s_64 + i)->segname, SEG_TEXT))
+		if (ft_strequ((s_32 + i)->sectname, SECT_TEXT) &&
+				ft_strequ((s_32 + i)->segname, SEG_TEXT))
 				// these are from the mach-o/loader header
-			(swap_end) ? otool_hex_dump_mach_o_64_magic(o->data +
-swap_uint64((s_64 + i)->offset), swap_uint64((s_64 + i)->size), o->file_name)
-				: otool_hex_dump_mach_o_64_magic(o->data + (s_64 + i)->offset,
-						(s_64 + i)->size, o->file_name);
+			(swap_end) ? otool_hex_dump_mach_o_32_magic(o->data +
+swap_uint32((s_32 + i)->offset), swap_uint32((s_32 + i)->size), o->file_name)
+				: otool_hex_dump_mach_o_32_magic(o->data + (s_32 + i)->offset,
+						(s_32 + i)->size, o->file_name);
 		i++;
 	}
 }
@@ -104,29 +109,29 @@ swap_uint64((s_64 + i)->offset), swap_uint64((s_64 + i)->size), o->file_name)
 ** then each load command is right after each other
 */
 
-void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end)
+void		handle_mach_o_32(t_ft_otool *o, char *file_name, int swap_end)
 {
-	struct mach_header_64		*m_header;
+	struct mach_header		*m_header;
 	struct load_command			*load_c;
 	uint32_t					tmp;
 
 	(void)file_name;
-	m_header = (struct mach_header_64 *)o->data;
-	if (m_header->cputype != CPU_TYPE_X86_64 &&\
-			m_header->cputype != CPU_TYPE_POWERPC64)//im not sure which exact
+	m_header = (struct mach_header *)o->data;
+	if (m_header->cputype != CPU_TYPE_X86 &&\
+			m_header->cputype != CPU_TYPE_POWERPC)//im not sure which exact
 		//header te CPU_TYPES are defined in, but looking through the
 		//	includes in the mach-o headers
 		return ;//invalid
-	tmp = (swap_end) ? swap_uint64(m_header->ncmds) : m_header->ncmds;
-	load_c = (struct load_command *)(o->data + sizeof(struct mach_header_64));
+	tmp = (swap_end) ? swap_uint32(m_header->ncmds) : m_header->ncmds;
+	load_c = (struct load_command *)(o->data + sizeof(struct mach_header));
 		//go to the first segment
 	while (tmp--)//go through the load commands
 	{
-		if (((swap_end) ? swap_uint64(load_c->cmd) == LC_SEGMENT_64 :
-				load_c->cmd == LC_SEGMENT_64))
+		if (((swap_end) ? swap_uint32(load_c->cmd) == LC_SEGMENT :
+				load_c->cmd == LC_SEGMENT))
 			handle_load_command(o, load_c, o->len, swap_end);
 		//move load_c to next load command
-		load_c = ((void *)load_c + ((swap_end) ? swap_uint64(load_c->cmdsize) :
+		load_c = ((void *)load_c + ((swap_end) ? swap_uint32(load_c->cmdsize) :
 					load_c->cmdsize));
 	}
 }

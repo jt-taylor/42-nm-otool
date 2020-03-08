@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 19:15:24 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/08 14:31:02 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,9 @@ void			otool_hanldle_inner(t_ft_otool *o, char *file_name)
 		handle_mach_o_32(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 32
 	else if (which_magic == MH_MAGIC_64 || which_magic == MH_CIGAM_64)
 		handle_mach_o_64(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 64
-	else if (which_magic == FAT_MAGIC || which_magic == FAT_CIGAM)
-		;//handle fat-bin 32
-	else if (which_magic == FAT_MAGIC_64 || which_magic == FAT_CIGAM_64)
-		;//hanlde fat-bin 64
+	else if (which_magic == FAT_MAGIC || which_magic == FAT_CIGAM ||
+				which_magic == FAT_MAGIC_64 || which_magic == FAT_CIGAM_64)
+		handle_fat_binary(o, file_name);
 //	else if (which_magic == AR_MAGIC || which_magic == AR_CIGAM)
 //		;//think that we are supposed to handle archives
 	else

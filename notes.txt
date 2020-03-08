@@ -14,11 +14,12 @@ http://mirror.informatimago.com/next/developer.apple.com/documentation/Developer
 https://gist.github.com/landonf/1046134
 https://stackoverflow.com/questions/44579663/mach-o-magic-and-cigam-clarification
 
-//the open source code of otool
+//the source code of otool
 https://opensource.apple.com/source/cctools/cctools-358/otool/
 
 also you might want to look at the headers for the mach-o header files ,
 https://opensource.apple.com/source/xnu/xnu-1456.1.26/EXTERNAL_HEADERS/mach-o/loader.h
+https://opensource.apple.com/source/xnu/xnu-344.49/EXTERNAL_HEADERS/mach-o/fat.h.auto.html
 
 im not sure if we need to handle archives for either nm  && otool ,
 looks like we do but the way the file is set up should mean we don't need to do anything fancy
@@ -26,4 +27,16 @@ with lists or anything , pretty sure we just end up reading the archive header
 then all the objects are after it sequentially mostly the same way tar works
 
 use the -m32 flag for gcc to force 32 bit compiliation
+use -arch to make fat/universal binarys ie
+	gcc libft/ft_atoi.c -c -arch i386 -arch x86_64 -I ./libft/includes
 not sure if you can swap the endianess of the file
+
+related tools
+	pagestuff
+	strings
+	atos
+	dyldinfo
+	segedit
+	file
+	lipo
+	install_name_tool

@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 17:06:52 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 19:07:25 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/08 13:08:36 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end)
 
 	(void)file_name;
 	m_header = (struct mach_header_64 *)o->data;
+	// im not sure why im caring about the cputype ,
+	// shouldn't it not matter at all to the otool ?
 	if (m_header->cputype != CPU_TYPE_X86_64 &&\
 			m_header->cputype != CPU_TYPE_POWERPC64)//im not sure which exact
 		//header te CPU_TYPES are defined in, but looking through the

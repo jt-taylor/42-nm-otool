@@ -13,6 +13,7 @@ https://jameshfisher.com/2017/08/22/inspecting-mach-o-files/
 http://mirror.informatimago.com/next/developer.apple.com/documentation/DeveloperTools/Conceptual/MachORuntime/8rt_file_format/chapter_10_section_1.html
 https://gist.github.com/landonf/1046134
 https://stackoverflow.com/questions/44579663/mach-o-magic-and-cigam-clarification
+https://seriot.ch/hello_macho.php
 
 //the source code of otool
 https://opensource.apple.com/source/cctools/cctools-358/otool/

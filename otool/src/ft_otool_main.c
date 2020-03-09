@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/08 14:31:02 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/09 11:42:40 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,5 +147,7 @@ int		main(int ac, char **argv)
 		return (INV_ARGS);
 	}
 	process_file_list(argv + 1, ac - 1);
+	//system("leaks a.out");
+:wa
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/09 11:42:40 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/09 18:52:01 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 ** cur_add - start_addr + len_rto_read < len of memory
 */
 
+// i really need to move this into the rest of the functions
 void			*otool_file_read_protect(t_ft_otool *o,
 		void *addr_start, size_t len_to_read)
 {
@@ -57,11 +58,11 @@ void			otool_hanldle_inner(t_ft_otool *o, char *file_name)
 		handle_mach_o_64(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 64
 	else if (which_magic == FAT_MAGIC || which_magic == FAT_CIGAM ||
 				which_magic == FAT_MAGIC_64 || which_magic == FAT_CIGAM_64)
-		handle_fat_binary(o, file_name);
-//	else if (which_magic == AR_MAGIC || which_magic == AR_CIGAM)
-//		;//think that we are supposed to handle archives
+		handle_fat_binary(o, file_name);//fat/universal binaries
+	else if (which_magic == (*(uint32_t *)ARMAG) || which_magic == swap_uint32((*(uint32_t *)ARMAG)))//all the numbers in the archive header are stored as asci
+		handle_archive(o, file_name);//archive
 	else
-		;//erorr magic incorrect
+		return ;//erorr magic incorrect
 }
 
 int				otool_handle(void		*data, size_t len, char *file_name)
@@ -148,6 +149,5 @@ int		main(int ac, char **argv)
 	}
 	process_file_list(argv + 1, ac - 1);
 	//system("leaks a.out");
-:wa
 	return (0);
 }

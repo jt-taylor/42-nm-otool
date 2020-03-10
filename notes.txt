@@ -41,3 +41,4 @@ related tools
 	file
 	lipo
 	install_name_tool
+	ld // linker , mostly used for the archive file format

@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 11:18:36 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/10 18:24:31 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/10 18:57:20 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,10 @@ int				handle_archive(t_ft_otool *o, char *file_name)
 }
 */
 
+/*
+** https://en.wikipedia.org/wiki/Ar_(Unix)
+*/
+
 int					handle_archive(t_ft_otool *o, char *file_name)
 {
 	void				*tmp;
@@ -85,7 +89,12 @@ int					handle_archive(t_ft_otool *o, char *file_name)
 		if (((i = ft_atoi(ar_header->ar_size)) && !i) || (o->len - (tmp - o->data) <= 0))
 			return (-1);//corrupt archive header
 		tmp2 = (void *)ar_header + sizeof(struct ar_hdr);//correct offset for the obj_name but not the actual obj data
+		i = ft_strlen((char *)tmp2);
 		ft_printf("%s(%s)\n", file_name, (char *)tmp2);
+		while (*(char *)tmp2)
+			tmp2++;
+		while (!*(char *)tmp2)
+			tmp2++;
 		otool_handle(tmp2, (o->len - (tmp2 - o->data)), file_name);
 		break;//
 	}

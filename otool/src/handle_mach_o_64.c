@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 17:06:52 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/10 20:38:15 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/11 11:15:40 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 
 /*
 ** we don't care about the endianess for the ehxdump
+** for obj files the addr starts at 0, and for linked programs the offset
+** starts at (struct section_64)->addr which is 0 for obj files
 */
 
-static void	hex_dump(void *data, size_t len_to_dump)
+static void	hex_dump(void *data, size_t len_to_dump, uint64_t address_print_off)
 {
 	size_t		i;
 	void		*tmp;
@@ -32,7 +34,7 @@ static void	hex_dump(void *data, size_t len_to_dump)
 	while (i < len_to_dump)
 	{
 		if (i % 16 == 0)
-			ft_printf("%016llx\t", i);//offset from
+			ft_printf("%016llx\t", i + address_print_off);//offset from
 		ft_printf("%02llx", 0xff & ((char *)data)[i]);// only print 2 spaced hex
 		if (i % 16 == 15)
 			write(1, " \n", 2);
@@ -52,11 +54,11 @@ static void	hex_dump(void *data, size_t len_to_dump)
 */
 
 static void	otool_hex_dump_mach_o_64_magic(void *data, size_t to_dump,
-		char *file_name)
+		char *file_name, uint64_t address_print_offset)
 {
 	if (file_name && g_to_print_flag)
 		ft_printf("%s:\n%s\n", file_name, FT_OTOOL_TEXT);
-	hex_dump(data, to_dump);
+	hex_dump(data, to_dump, address_print_offset);
 }
 
 /*
@@ -90,9 +92,10 @@ static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 				ft_strequ((s_64 + i)->segname, SEG_TEXT))
 				// these are from the mach-o/loader header
 			(swap_end) ? otool_hex_dump_mach_o_64_magic(o->data +
-swap_uint64((s_64 + i)->offset), swap_uint64((s_64 + i)->size), o->file_name)
+swap_uint64((s_64 + i)->offset), swap_uint64((s_64 + i)->size), o->file_name, 
+					swap_uint64((s_64 + i)->addr))
 				: otool_hex_dump_mach_o_64_magic(o->data + (s_64 + i)->offset,
-						(s_64 + i)->size, o->file_name);
+						(s_64 + i)->size, o->file_name, (s_64 + i)->addr);
 		i++;
 	}
 }

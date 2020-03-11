@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:49:56 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/09 18:52:21 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/10 20:45:17 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@
 ** FAT_CIGAM_64
 */
 
+extern uint8_t		g_to_print_flag;
+
 /*
 ** structs ---------------------------------------------------------------------
 */
@@ -62,6 +64,7 @@ typedef struct		s_ft_otool
 	void		*data;
 	size_t		len;
 	char		*file_name;
+	char		to_print;
 }					t_ft_otool;
 
 /*

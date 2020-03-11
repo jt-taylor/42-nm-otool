@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 19:07:36 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/07 19:13:05 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/10 20:51:55 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	hex_dump(void *data, size_t len_to_dump)
 	while (i < len_to_dump)
 	{
 		if (i % 16 == 0)
-			ft_printf("%016llx\t", i);//offset from
+			ft_printf("%08llx\t", i);//offset from
 		ft_printf("%02llx", 0xff & ((char *)data)[i]);// only print 2 spaced hex
 		if (i % 16 == 15)
 			write(1, " \n", 2);
@@ -59,7 +59,7 @@ static void	hex_dump(void *data, size_t len_to_dump)
 static void	otool_hex_dump_mach_o_32_magic(void *data, size_t to_dump,
 		char *file_name)
 {
-	if (file_name)
+	if (file_name && g_to_print_flag)
 		ft_printf("%s:\n%s\n", file_name, FT_OTOOL_TEXT);
 	hex_dump(data, to_dump);
 }
@@ -117,11 +117,11 @@ void		handle_mach_o_32(t_ft_otool *o, char *file_name, int swap_end)
 
 	(void)file_name;
 	m_header = (struct mach_header *)o->data;
-	if (m_header->cputype != CPU_TYPE_X86 &&\
-			m_header->cputype != CPU_TYPE_POWERPC)//im not sure which exact
-		//header te CPU_TYPES are defined in, but looking through the
-		//	includes in the mach-o headers
-		return ;//invalid
+//	if (m_header->cputype != CPU_TYPE_X86 &&\
+//			m_header->cputype != CPU_TYPE_POWERPC)//im not sure which exact
+//		//header te CPU_TYPES are defined in, but looking through the
+//		//	includes in the mach-o headers
+//		return ;//invalid
 	tmp = (swap_end) ? swap_uint32(m_header->ncmds) : m_header->ncmds;
 	load_c = (struct load_command *)(o->data + sizeof(struct mach_header));
 		//go to the first segment

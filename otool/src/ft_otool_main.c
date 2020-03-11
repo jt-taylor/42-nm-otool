@@ -6,11 +6,13 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/09 18:52:01 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/10 20:45:17 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
+
+uint8_t			g_to_print_flag = 1;
 
 /*
 ** -----------------------------------------------------------------------------
@@ -73,6 +75,7 @@ int				otool_handle(void		*data, size_t len, char *file_name)
 	o.data = data;
 	o.len = len;
 	o.file_name = file_name;
+	o.to_print = 1;
 	has_magic = otool_file_read_protect(&o, o.data, sizeof(uint32_t));
 	if (!has_magic)
 	{

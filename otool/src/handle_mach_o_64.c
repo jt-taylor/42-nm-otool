@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 17:06:52 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/08 13:08:36 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/10 20:38:15 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	hex_dump(void *data, size_t len_to_dump)
 static void	otool_hex_dump_mach_o_64_magic(void *data, size_t to_dump,
 		char *file_name)
 {
-	if (file_name)
+	if (file_name && g_to_print_flag)
 		ft_printf("%s:\n%s\n", file_name, FT_OTOOL_TEXT);
 	hex_dump(data, to_dump);
 }
@@ -114,11 +114,13 @@ void		handle_mach_o_64(t_ft_otool *o, char *file_name, int swap_end)
 	m_header = (struct mach_header_64 *)o->data;
 	// im not sure why im caring about the cputype ,
 	// shouldn't it not matter at all to the otool ?
-	if (m_header->cputype != CPU_TYPE_X86_64 &&\
-			m_header->cputype != CPU_TYPE_POWERPC64)//im not sure which exact
-		//header te CPU_TYPES are defined in, but looking through the
-		//	includes in the mach-o headers
-		return ;//invalid
+//	if (m_header->cputype != CPU_TYPE_X86_64 &&\
+//			m_header->cputype != CPU_TYPE_POWERPC64)//im not sure which exact
+//		//header te CPU_TYPES are defined in, but looking through the
+//		//	includes in the mach-o headers
+//		//	do we even care about the cpu type ?
+//		//	it really shoudn't matter right ?
+//		return ;//invalid
 	tmp = (swap_end) ? swap_uint64(m_header->ncmds) : m_header->ncmds;
 	load_c = (struct load_command *)(o->data + sizeof(struct mach_header_64));
 		//go to the first segment

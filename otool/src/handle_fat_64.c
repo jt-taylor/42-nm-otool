@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/08 12:57:00 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/09 11:14:09 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/10 21:02:02 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 ** handle the fat/universal binarys or the archives im just assumeing that i need
 ** to
 */
-
 
 static int	pass_to_otool_handle(void *data, char *file_name, t_ft_otool *o)
 {

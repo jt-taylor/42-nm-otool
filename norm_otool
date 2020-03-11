@@ -1,0 +1,41 @@
+Norme: ./otool/otool_notes
+Warning: Not a valid file
+Norme: ./otool/inc/ft_otool.h
+Norme: ./otool/src/handle_mach_o_32.c
+Error (line 75): declarations in handle_load_command are bad aligned
+Error (line 95): line has 130 characters
+Error (line 107): declarations in handle_mach_o_32 are bad aligned
+Norme: ./otool/src/ft_otool_main.c
+Error: global scope bad aligned
+Error: 6 functions in the file
+Norme: ./otool/src/handle_archive.c
+Norme: ./otool/src/handle_mach_o_64.c
+Error (line 37): C++ comment
+Error (line 38): C++ comment
+Error (line 46): C++ comment
+Error (line 47): bad indentation
+Error (line 47): C++ comment
+Error (line 80): C++ comment
+Error (line 81): C++ comment
+Error (line 82): C++ comment
+Error (line 83): C++ comment
+Error (line 93): C++ comment
+Error (line 95): spaces at the end of line
+Error (line 110): function handle_mach_o_64 has 27 lines
+Error (line 118): C++ comment
+Error (line 119): C++ comment
+Error (line 120): C++ comment
+Error (line 121): C++ comment
+Error (line 122): C++ comment
+Error (line 123): C++ comment
+Error (line 124): C++ comment
+Error (line 125): C++ comment
+Error (line 126): C++ comment
+Error (line 129): bad indentation
+Error (line 129): C++ comment
+Error (line 130): C++ comment
+Error (line 135): bad indentation
+Error (line 135): C++ comment
+Norme: ./otool/src/handle_fat_64.c
+Error: global scope bad aligned
+Error (line 28): line has 82 characters

@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 17:48:22 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/10 20:45:17 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/11 12:35:11 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ uint8_t			g_to_print_flag = 1;
 ** cur_add - start_addr + len_rto_read < len of memory
 */
 
-// i really need to move this into the rest of the functions
 void			*otool_file_read_protect(t_ft_otool *o,
 		void *addr_start, size_t len_to_read)
 {
@@ -55,19 +54,20 @@ void			otool_hanldle_inner(t_ft_otool *o, char *file_name)
 	data = o->data;
 	which_magic = *(uint32_t *)data;
 	if (which_magic == MH_MAGIC || which_magic == MH_CIGAM)
-		handle_mach_o_32(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 32
+		handle_mach_o_32(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);
 	else if (which_magic == MH_MAGIC_64 || which_magic == MH_CIGAM_64)
-		handle_mach_o_64(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);//handle mach-o 64
+		handle_mach_o_64(o, file_name, (which_magic == MH_CIGAM_64) ? 1 : 0);
 	else if (which_magic == FAT_MAGIC || which_magic == FAT_CIGAM ||
 				which_magic == FAT_MAGIC_64 || which_magic == FAT_CIGAM_64)
-		handle_fat_binary(o, file_name);//fat/universal binaries
-	else if (which_magic == (*(uint32_t *)ARMAG) || which_magic == swap_uint32((*(uint32_t *)ARMAG)))//all the numbers in the archive header are stored as asci
-		handle_archive(o, file_name);//archive
+		handle_fat_binary(o, file_name);
+	else if (which_magic == (*(uint32_t *)ARMAG) || which_magic ==
+			swap_uint32((*(uint32_t *)ARMAG)))
+		handle_archive(o, file_name);
 	else
-		return ;//erorr magic incorrect
+		return ;
 }
 
-int				otool_handle(void		*data, size_t len, char *file_name)
+int				otool_handle(void *data, size_t len, char *file_name)
 {
 	t_ft_otool		o;
 	uint32_t		*has_magic;
@@ -102,26 +102,18 @@ static inline int	otool_open_file(char *file_name)
 	if (fd < 0)
 		return (ft_dprintf(2, "Erorr :Opening: \'%s\'\n", file_name));
 	else if (fstat(fd, &tmp))
-		return (ft_dprintf(2, "Erorr :fstat: \'%s\'\n", file_name));//and close fd
+		return (ft_dprintf(2, "Erorr :fstat: \'%s\'\n", file_name));
 	else if (S_ISDIR(tmp.st_mode))
-		return (ft_dprintf(2, "Erorr :IS_DIR: \'%s\'\n", file_name));//and close fdk
+		return (ft_dprintf(2, "Erorr :IS_DIR: \'%s\'\n", file_name));
 	else if (1)
 	{
-		//still wanna play with mmap, just using mmap should be really simple
-		//even though i didn't do malloc
-		//so something like
-		//alloc memory the man says MAP_FILE is the default and doesn't need to be specified
 		data = mmap(0, tmp.st_size, PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0);
 		if (!data)
-			;//exit error alloc mem
-		//pass to handle -- handle alloc fail
+			;
 		otool_handle(data, tmp.st_size, file_name);
-		//unalloc memory
-		//close fd
 	}
-	else//this is redundent
+	else
 		return (0);
-	//still not sure if want to play with the munmap
 	munmap(data, tmp.st_size);
 	close(fd);
 	return (0);
@@ -134,11 +126,7 @@ static inline void	process_file_list(char **file_list, int file_count)
 	i = 0;
 	while (i < file_count)
 	{
-		//open && validate file;
 		otool_open_file(file_list[i]);
-		//process the file;
-		//close the file
-		//continue;
 		i++;
 	}
 }
@@ -151,6 +139,5 @@ int		main(int ac, char **argv)
 		return (INV_ARGS);
 	}
 	process_file_list(argv + 1, ac - 1);
-	//system("leaks a.out");
 	return (0);
 }

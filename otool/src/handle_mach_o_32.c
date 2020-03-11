@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 19:07:36 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/11 11:16:36 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/11 12:39:20 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ static void	hex_dump(void *data, size_t len_to_dump, uint32_t address_print_off)
 	while (i < len_to_dump)
 	{
 		if (i % 16 == 0)
-			ft_printf("%08llx\t", i + address_print_off);//offset from
-		ft_printf("%02llx", 0xff & ((char *)data)[i]);// only print 2 spaced hex
+			ft_printf("%08llx\t", i + address_print_off);
+		ft_printf("%02llx", 0xff & ((char *)data)[i]);
 		if (i % 16 == 15)
 			write(1, " \n", 2);
 		else
@@ -46,8 +46,7 @@ static void	hex_dump(void *data, size_t len_to_dump, uint32_t address_print_off)
 		i++;
 	}
 	if ((len_to_dump % 16) != 0)
-		write(1, "\n", 1);//so that when it end with a full line it doesn't put
-							//an extra newline
+		write(1, "\n", 1);
 }
 
 /*
@@ -80,10 +79,7 @@ static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	struct section				*s_32;
 	uint32_t						i;
 
-	(void)size;//implement the out of bounds check here ?
-	//think i need that to make sure that there isn't any corruption of the file
-	// probably easier to do it somewhere else ?
-	// makeing sure that we never read out of memory is gonna be a pain :{
+	(void)size;
 	curr_segment = (struct segment_command *)(load_cmd);
 	s_32 = (struct section *)((void *)curr_segment +
 			sizeof(struct segment_command));
@@ -93,12 +89,10 @@ static void	handle_load_command(t_ft_otool *o, void *load_cmd, size_t size,
 	{
 		if (ft_strequ((s_32 + i)->sectname, SECT_TEXT) &&
 				ft_strequ((s_32 + i)->segname, SEG_TEXT))
-				// these are from the mach-o/loader header
 			(swap_end) ? otool_hex_dump_mach_o_32_magic(o->data +
 swap_uint32((s_32 + i)->offset), swap_uint32((s_32 + i)->size), o->file_name,
 					swap_uint32((s_32 + i)->addr))
-				: otool_hex_dump_mach_o_32_magic(o->data + (s_32 + i)->offset,
-						(s_32 + i)->size, o->file_name, (s_32 + i)->addr);
+				: otool_hex_dump_mach_o_32_magic(o->data + (s_32 + i)->offset, (s_32 + i)->size, o->file_name, (s_32 + i)->addr);
 		i++;
 	}
 }
@@ -118,20 +112,13 @@ void		handle_mach_o_32(t_ft_otool *o, char *file_name, int swap_end)
 
 	(void)file_name;
 	m_header = (struct mach_header *)o->data;
-//	if (m_header->cputype != CPU_TYPE_X86 &&\
-//			m_header->cputype != CPU_TYPE_POWERPC)//im not sure which exact
-//		//header te CPU_TYPES are defined in, but looking through the
-//		//	includes in the mach-o headers
-//		return ;//invalid
 	tmp = (swap_end) ? swap_uint32(m_header->ncmds) : m_header->ncmds;
 	load_c = (struct load_command *)(o->data + sizeof(struct mach_header));
-		//go to the first segment
-	while (tmp--)//go through the load commands
+	while (tmp--)
 	{
 		if (((swap_end) ? swap_uint32(load_c->cmd) == LC_SEGMENT :
 				load_c->cmd == LC_SEGMENT))
 			handle_load_command(o, load_c, o->len, swap_end);
-		//move load_c to next load command
 		load_c = ((void *)load_c + ((swap_end) ? swap_uint32(load_c->cmdsize) :
 					load_c->cmdsize));
 	}

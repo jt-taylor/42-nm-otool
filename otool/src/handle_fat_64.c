@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/08 12:57:00 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/10 21:02:02 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/11 12:41:38 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,17 @@ static int	pass_to_otool_handle(void *data, char *file_name, t_ft_otool *o)
 int		handle_fat_binary_64(t_ft_otool *o, char *file_name)
 {
 	struct fat_header		*f_header;
-	struct fat_arch_64				*f_arch;
+	struct fat_arch_64		*f_arch;
 	uint32_t				num_of_arches;
 
 	f_header = (struct fat_header *)o->data;
 	if (f_header->magic == FAT_MAGIC_64 || f_header->magic == FAT_CIGAM_64)
 		return (handle_fat_binary_64(o, file_name));
 	num_of_arches = f_header->nfat_arch;
-	num_of_arches = (f_header->magic == FAT_CIGAM) ? swap_uint32(num_of_arches) :
-		num_of_arches;
+	num_of_arches = (f_header->magic == FAT_CIGAM) ?
+		swap_uint32(num_of_arches) : num_of_arches;
 	if (!num_of_arches)
-		return (2);//no arches in fat file ??
+		return (2);
 	f_arch = o->data + sizeof(struct fat_header);
 	return (pass_to_otool_handle((o->data + ((f_header->magic == FAT_CIGAM) ?
 			swap_uint32(f_arch->offset) : f_arch->offset)), file_name,
@@ -66,20 +66,20 @@ int		handle_fat_binary_64(t_ft_otool *o, char *file_name)
 ** actually printing the data
 */
 
-int		handle_fat_binary(t_ft_otool *o, char *file_name)
+int			handle_fat_binary(t_ft_otool *o, char *file_name)
 {
 	struct fat_header		*f_header;
-	struct fat_arch				*f_arch;
+	struct fat_arch			*f_arch;
 	uint32_t				num_of_arches;
 
 	f_header = (struct fat_header *)o->data;
 	if (f_header->magic == FAT_MAGIC_64 || f_header->magic == FAT_CIGAM_64)
 		return (handle_fat_binary_64(o, file_name));
 	num_of_arches = f_header->nfat_arch;
-	num_of_arches = (f_header->magic == FAT_CIGAM) ? swap_uint32(num_of_arches) :
-		num_of_arches;
+	num_of_arches = (f_header->magic == FAT_CIGAM) ?
+		swap_uint32(num_of_arches) : num_of_arches;
 	if (!num_of_arches)
-		return (2);//no arches in fat file ??
+		return (2);
 	f_arch = o->data + sizeof(struct fat_header);
 	return (pass_to_otool_handle((o->data + ((f_header->magic == FAT_CIGAM) ?
 			swap_uint32(f_arch->offset) : f_arch->offset)), file_name,

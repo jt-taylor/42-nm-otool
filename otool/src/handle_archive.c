@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 11:18:36 by jtaylor           #+#    #+#             */
-/*   Updated: 2020/03/10 20:49:39 by jtaylor          ###   ########.fr       */
+/*   Updated: 2020/03/11 12:36:55 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ int					handle_archive(t_ft_otool *o, char *file_name)
 	g_to_print_flag = 0;
 	tmp = o->data + SARMAG;
 	ar_header = (struct ar_hdr *)tmp;
-	//write(1, &header->ar_name[0], 16);
 	while (tmp && (tmp += ft_atoi(ar_header->ar_size) + sizeof(struct ar_hdr)))
 	{
 		ar_header = tmp;
-		if (((i = ft_atoi(ar_header->ar_size)) && !i) || (o->len - (tmp - o->data) <= 0))
-			return (-1);//corrupt archive header
-		tmp2 = (void *)ar_header + sizeof(struct ar_hdr);//correct offset for the obj_name but not the actual obj data
+		if (((i = ft_atoi(ar_header->ar_size)) && !i) ||
+				(o->len - (tmp - o->data) <= 0))
+			return (-1);
+		tmp2 = (void *)ar_header + sizeof(struct ar_hdr);
 		i = ft_strlen((char *)tmp2);
 		ft_printf("%s(%s):\n%s\n", file_name, (char *)tmp2, FT_OTOOL_TEXT);
 		while (*(char *)tmp2)
